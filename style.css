@@ -1,0 +1,69 @@
+body {
+    font-family: system-ui;
+    background-color: #020344;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 40px;
+}
+
+.ha {
+    text-align: center;
+    padding-top: 80px;
+}
+
+.artikel {
+    margin-left: 5%;
+}
+
+.gambar {
+    border-radius: 20%;
+    margin-left: 7%;
+}
+
+.bebas {
+    display: flex;
+}
+
+.bebas2 {
+    display: flex;
+    margin-top: 5%;
+    padding-top: 80px;
+}
+
+nav {
+    background-color: #020344;
+    position: fixed;
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li a {
+    color: white;
+    padding: 20px 16px;
+    text-decoration: none;
+    float: left;
+    font-weight: bold;
+}
+
+li a:hover {
+    background-color: #080878;
+}
+
+footer {
+    background-color: #1620b1;
+    margin: 25px;
+    text-align: center;
+    padding: 10px;
+}
+
+a {
+    color: rgb(255, 242, 56);
+    text-decoration: none;
+}
