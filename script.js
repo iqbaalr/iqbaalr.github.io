@@ -161,6 +161,7 @@ function showMovieDetails(movie) {
 
     const showTitle = document.createElement('h2');
     showTitle.textContent = movie.name;
+    showTitle.style.color = '#000000'
 
     // Membuat elemen <p> untuk deskripsi film
     const overview = document.createElement('p');
