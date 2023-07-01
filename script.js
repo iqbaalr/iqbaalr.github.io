@@ -4,44 +4,51 @@ var searchInput = document.querySelector('#searchInput');
 var searchButton = document.querySelector('#searchButton');
 
 // Fungsi untuk memuat daftar film berdasarkan judul pencarian
-function loadMoviesByTitle(title) {
+function loadMoviesAndTVShowsByTitle(title) {
     // Membersihkan isi tabel sebelum memuat data baru
     index.innerHTML = '';
 
-    // Mengambil data dari API TMDb berdasarkan judul pencarian
-    fetch('https://api.themoviedb.org/3/search/movie?api_key=8786ffd1b392111a67759e0e7389bc3a&query=' + encodeURIComponent(title))
-        .then(response => response.json())
-        .then(data => {
+    // Mengambil data dari API TMDb berdasarkan judul pencarian untuk film
+    const movieSearchUrl = 'https://api.themoviedb.org/3/search/movie?api_key=8786ffd1b392111a67759e0e7389bc3a&query=' + encodeURIComponent(title);
+    const tvShowSearchUrl = 'https://api.themoviedb.org/3/search/tv?api_key=8786ffd1b392111a67759e0e7389bc3a&query=' + encodeURIComponent(title);
+
+    // Fetch data film dan acara TV secara paralel menggunakan Promise.all
+    Promise.all([fetch(movieSearchUrl), fetch(tvShowSearchUrl)])
+        .then(responses => Promise.all(responses.map(response => response.json())))
+        .then(dataArray => {
             const movieSearching = document.querySelector('.movie-searching');
 
             // Menampilkan daftar film
-            data.results.forEach(movie => {
-                const movieCard = document.createElement('div');
-                movieCard.classList.add('movie-card');
+            dataArray.forEach(data => {
+                data.results.forEach(result => {
+                    const movieCard = document.createElement('div');
+                    movieCard.classList.add('movie-card');
 
-                const movieImage = document.createElement('img');
-                movieImage.src = 'https://image.tmdb.org/t/p/w200' + movie.poster_path;
-                movieImage.alt = movie.title;
+                    const movieImage = document.createElement('img');
+                    movieImage.src = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
+                    movieImage.alt = result.title || result.name;
 
-                const movieTitle = document.createElement('h2');
-                movieTitle.textContent = movie.title;
+                    const movieTitle = document.createElement('h2');
+                    movieTitle.textContent = result.title || result.name;
 
-                const movieRating = document.createElement('p');
-                movieRating.textContent = 'Rating: ' + movie.vote_average + " \u{2B50}";
-                const moviePopularity = document.createElement('p');
-                moviePopularity.textContent = 'Popularity: ' + movie.popularity;
+                    const movieRating = document.createElement('p');
+                    movieRating.textContent = 'Rating: ' + (result.vote_average || result.vote_average === 0 ? result.vote_average + " \u{2B50}" : 'N/A');
 
-                movieCard.appendChild(movieImage);
-                movieCard.appendChild(movieTitle);
-                movieCard.appendChild(movieRating);
-                movieCard.appendChild(moviePopularity);
+                    const moviePopularity = document.createElement('p');
+                    moviePopularity.textContent = 'Popularity: ' + (result.popularity || 'N/A');
 
-                // Menambahkan event listener pada poster
-                movieImage.addEventListener('click', function () {
-                    showMovieDetails(movie);
+                    movieCard.appendChild(movieImage);
+                    movieCard.appendChild(movieTitle);
+                    movieCard.appendChild(movieRating);
+                    movieCard.appendChild(moviePopularity);
+
+                    // Menambahkan event listener pada poster
+                    movieImage.addEventListener('click', function () {
+                        showMovieDetails(result);
+                    });
+
+                    movieSearching.appendChild(movieCard);
                 });
-
-                movieSearching.appendChild(movieCard);
             });
         })
         .catch(error => {
@@ -49,10 +56,11 @@ function loadMoviesByTitle(title) {
         });
 }
 
+
 // Event listener untuk tombol pencarian
 searchButton.addEventListener('click', function () {
     var searchTitle = searchInput.value;
-    loadMoviesByTitle(searchTitle);
+    loadMoviesAndTVShowsByTitle(searchTitle);
 });
 // Mengambil data dari API TMDb
 fetch('https://api.themoviedb.org/3/trending/movie/week?api_key=8786ffd1b392111a67759e0e7389bc3a')
