@@ -23,6 +23,7 @@ function loadMoviesAndTVShowsByTitle(title) {
                 data.results.forEach(result => {
                     const movieCard = document.createElement('div');
                     movieCard.classList.add('movie-card');
+                    movieCard.style.marginTop = '10%';
 
                     const movieImage = document.createElement('img');
                     movieImage.src = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
